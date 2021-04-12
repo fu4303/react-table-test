@@ -59,6 +59,7 @@ const Table = ({ columns, data, dispatch }: ITable & UseTableOptions<Participant
           <th>
             <Input
               id="name"
+              type="text"
               fullWidth
               value={newParticipant.name}
               placeholder="Name"
@@ -69,6 +70,7 @@ const Table = ({ columns, data, dispatch }: ITable & UseTableOptions<Participant
           <th>
             <Input
               id="email"
+              type="email"
               fullWidth
               value={newParticipant.email}
               placeholder="E-mail address"
@@ -79,6 +81,7 @@ const Table = ({ columns, data, dispatch }: ITable & UseTableOptions<Participant
           <th>
             <Input
               id="phone"
+              type="tel"
               fullWidth
               value={newParticipant.phone}
               placeholder="Phone"
