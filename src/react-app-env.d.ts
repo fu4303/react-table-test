@@ -49,6 +49,7 @@ import {
   UseSortByOptions,
   UseSortByState,
 } from 'react-table';
+import ITheme from './constants/types';
 
 declare module 'react-table' {
   // take this file as-is, or comment out the sections that don't apply to your plugin configuration
@@ -120,6 +121,8 @@ declare module 'react-table' {
       UseRowStateRowProps<D> {}
 }
 
+// How to clone theme properties to DefaultTheme from eg. /types/theme.ts?
+// The theme declaration should be somewhere else, but I don't know how to do that with create-react-app
 declare module 'styled-components' {
   export interface DefaultTheme {
     colors: {
