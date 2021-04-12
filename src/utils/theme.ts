@@ -4,6 +4,7 @@ const colorPalette = {
   white: '#ffffff',
   primary: '#07f',
   border: '#eeeeee',
+  danger: '#ce3b60',
   text: {
     light: '#909090',
     medium: '#757575',

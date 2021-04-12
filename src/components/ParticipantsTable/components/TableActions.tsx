@@ -42,8 +42,8 @@ const EditActions = styled.div`
 `;
 
 const TableActions = ({ row, dispatch, state }: ITableActions) => {
-  const { status } = state;
-  if (status === 'edit') {
+  const { status, currentRowId } = state;
+  if (status === 'edit' && Number(row.id) === currentRowId) {
     return (
       <EditActions>
         <Button type="button" variant="secondary" onClick={() => dispatch({ type: 'cancel' })}>

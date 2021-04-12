@@ -22,8 +22,10 @@ export type ParticipantTableState = {
   phone?: string;
 };
 
+export type ActionType = 'getData' | 'handleChange' | 'cancel' | 'editRow' | 'update' | 'delete' | 'create';
+
 export type ParticipantTableAction = {
-  type: string;
+  type: ActionType;
   data?: any;
 };
 
@@ -33,4 +35,8 @@ export interface IEditableCell {
   state: ParticipantTableState;
   dispatch: React.Dispatch<ParticipantTableAction>;
   field: string;
+}
+
+export interface ITable {
+  dispatch: React.Dispatch<ParticipantTableAction>;
 }

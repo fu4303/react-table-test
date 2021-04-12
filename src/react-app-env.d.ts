@@ -49,7 +49,6 @@ import {
   UseSortByOptions,
   UseSortByState,
 } from 'react-table';
-import ITheme from './constants/types';
 
 declare module 'react-table' {
   // take this file as-is, or comment out the sections that don't apply to your plugin configuration
@@ -129,6 +128,7 @@ declare module 'styled-components' {
       white: string;
       primary: string;
       border: string;
+      danger: string;
       text: {
         light: string;
         medium: string;

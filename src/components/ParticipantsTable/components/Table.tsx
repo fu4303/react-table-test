@@ -1,77 +1,24 @@
+import * as React from 'react';
 import { useTable, useSortBy, UseTableOptions } from 'react-table';
-import styled from 'styled-components';
+import * as z from 'zod';
+import faker from 'faker';
 import { ReactComponent as DownwardIcon } from '../../../constants/icons/Downward.svg';
 import { ReactComponent as UpwardIcon } from '../../../constants/icons/Upward.svg';
-import { Participant } from '../../../constants/types';
+import { Participant, ITable } from '../../../constants/types';
+import Input from '../../Input';
+import Button from '../../Button';
+import StyledTable from './StyledTable';
 
-const StyledTable = styled.table`
-  width: 100%;
-  border-spacing: 0;
-  background-color: ${(props) => props.theme.colors.white};
-
-  thead {
-    color: ${(props) => props.theme.colors.text.medium};
-    font-size: 14px;
-    line-height: 16px;
-    font-weight: 500;
-
-    tr {
-      height: 48px;
-    }
-  }
-
-  tbody {
-    color: ${(props) => props.theme.colors.text.dark};
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: 400;
-
-    tr {
-      height: 72px;
-    }
-  }
-
-  tr {
-    &:last-child {
-      td {
-        border-bottom: 0;
-      }
-    }
-  }
-
-  th,
-  td {
-    border-bottom: 1px solid ${(props) => props.theme.colors.border};
-    padding: 0 ${(props) => props.theme.spacing.baseSpace * 3}px;
-    text-align: left;
-    vertical-align: middle;
-  }
-
-  th {
-    border-bottom: 1px solid ${(props) => props.theme.colors.border};
-    color: ${(props) => props.theme.colors.text.medium};
-    font-weight: 500;
-    cursor: pointer;
-
-    &:hover {
-      color: ${(props) => props.theme.colors.text.dark};
-    }
-
-    div {
-      display: flex;
-      align-items: center;
-      svg {
-        margin-left: ${(props) => props.theme.spacing.baseSpace}px;
-        fill: ${(props) => props.theme.colors.text.medium};
-      }
-    }
-  }
-`;
+const newParticipantValidator = z.object({
+  name: z.string().min(5),
+  email: z.string().email(),
+  phone: z.string().min(5),
+});
 
 const getSortedIcon = (isSortedDesc: boolean | undefined) =>
   isSortedDesc ? <DownwardIcon width="14" /> : <UpwardIcon width="14" />;
 
-const Table = ({ columns, data }: UseTableOptions<Participant>) => {
+const Table = ({ columns, data, dispatch }: ITable & UseTableOptions<Participant>) => {
   const { getTableProps, getTableBodyProps, rows, prepareRow, headerGroups } = useTable(
     {
       columns,
@@ -80,9 +27,71 @@ const Table = ({ columns, data }: UseTableOptions<Participant>) => {
     useSortBy,
   );
 
+  const [newParticipant, setNewParticipant] = React.useState({
+    name: '',
+    email: '',
+    phone: '',
+  });
+
+  const [errors, setErrors] = React.useState<string[]>([]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setNewParticipant({ ...newParticipant, [e.target.id]: e.target.value });
+
+  const hasError = (field: string) => errors.some((fieldError) => fieldError === field);
+
+  const createRecord = () => {
+    try {
+      const validated = newParticipantValidator.parse(newParticipant);
+      dispatch({ type: 'create', data: { ...validated, id: faker.datatype.uuid() } });
+      setNewParticipant({ name: '', email: '', phone: '' });
+      setErrors([]);
+    } catch (error) {
+      setErrors(Object.keys(error.formErrors.fieldErrors));
+    }
+  };
+
   return (
     <StyledTable {...getTableProps()}>
       <thead>
+        {/* TODO: Refactor this to a new component and use a form instead */}
+        <tr>
+          <th>
+            <Input
+              id="name"
+              fullWidth
+              value={newParticipant.name}
+              placeholder="Name"
+              onChange={handleChange}
+              invalid={hasError('name')}
+            />
+          </th>
+          <th>
+            <Input
+              id="email"
+              fullWidth
+              value={newParticipant.email}
+              placeholder="E-mail address"
+              onChange={handleChange}
+              invalid={hasError('email')}
+            />
+          </th>
+          <th>
+            <Input
+              id="phone"
+              fullWidth
+              value={newParticipant.phone}
+              placeholder="Phone"
+              onChange={handleChange}
+              invalid={hasError('phone')}
+            />
+          </th>
+          <th>
+            <div>
+              <Button onClick={createRecord}>Add new</Button>
+            </div>
+          </th>
+        </tr>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (

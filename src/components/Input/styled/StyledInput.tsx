@@ -3,6 +3,8 @@ import styled, { ThemeProps, DefaultTheme } from 'styled-components';
 
 export interface IStyledInput extends InputHTMLAttributes<HTMLInputElement> {
   fullWidth?: boolean;
+  width?: string;
+  invalid?: boolean | undefined;
 }
 
 const StyledInput = styled.input<IStyledInput & ThemeProps<DefaultTheme>>`
@@ -11,12 +13,12 @@ const StyledInput = styled.input<IStyledInput & ThemeProps<DefaultTheme>>`
   height: 40px;
   border-radius: 0;
   border-style: solid;
-  border-width: 1px;
-  border-color: #f1f1f1;
+  border-width: ${(props) => (props.invalid ? '2px' : '1px')};
+  border-color: ${(props) => (props.invalid ? props.theme.colors.danger : props.theme.colors.border)};
   padding: 0 ${(props) => props.theme.spacing.baseSpace * 2}px;
   color: ${(props) => props.theme.colors.text.dark};
   background-color: ${(props) => props.theme.colors.bg.light};
-  width: ${(props) => (props.fullWidth ? '100%' : '')};
+  width: ${(props) => (props.fullWidth ? '100%' : props.width ?? 'auto')};
 
   &::placeholder {
     color: ${(props) => props.theme.colors.text.light};
